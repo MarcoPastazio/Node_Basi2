@@ -1,6 +1,6 @@
 //this is an example where i create my first end point with node and express. Let's go
 
-import express from 'express';
+const express = require('express');
 
 const app = express();
 
