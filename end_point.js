@@ -1,8 +1,8 @@
 //this is an example where i create my first end point with node and express. Let's go
 
-const express = require('express');
+import express from 'express';
 
-let app = express();
+const app = express();
 
 //i do a get and the response is a basic HELLO WORLD
 app.get("/", (req,res) => {
