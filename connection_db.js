@@ -12,7 +12,7 @@ const pool = new Pool({
   port: 5432,
 });
 
-
+//i create a server
 const server = http.createServer((req, res) => {
   //do an example of query
   pool.query('SELECT * FROM album')
