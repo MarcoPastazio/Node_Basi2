@@ -17,7 +17,7 @@ const pool = new Pool({
 
 app.use(express.json());
 
-app.get('/dati', (req, res) => {
+app.get('/', (req, res) => {
   pool.query('SELECT * FROM album')
     .then(result => res.json(result.rows))
     .catch(err => res.status(500).json({ error: 'Errore durante l\'esecuzione della query' }));
