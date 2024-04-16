@@ -13,7 +13,7 @@ const pool = new Pool({
 });
 
 
-const server = http.createServer(function(res, req){
+const server = http.createServer((res, req) => {
   //do an example of query
   pool.query('SELECT * FROM album')
   .then(result => {
