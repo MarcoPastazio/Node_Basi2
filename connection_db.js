@@ -1,4 +1,4 @@
-//this is a prove for a simple connection for the db
+//this is a prove for a simple connection for the db using only nodeJS
 
 const { Client } = require('pg');
 
