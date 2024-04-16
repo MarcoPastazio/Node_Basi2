@@ -15,4 +15,4 @@ const pool = new Pool({
 pool.query('SELECT * FROM album')
   .then(result => console.log(result.rows))
   .catch(err => console.error('Error executing the query', err))
-  .finally(() => client.end());
+  .finally(() => pool.end());
