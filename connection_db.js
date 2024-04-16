@@ -2,7 +2,7 @@
 
 const { Client } = require('pg');
 
-
+//create the client
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
@@ -11,12 +11,12 @@ const client = new Client({
   port: 5432,
 });
 
-
+//the client try to connect with PostgreSQL
 client.connect()
   .then(() => console.log('Connected to the PostgreSQL database'))
   .catch(err => console.error('Error while connecting to the database', err));
 
-
+//do an example of query
 client.query('SELECT * FROM album')
   .then(result => console.log(result.rows))
   .catch(err => console.error('Error executing the query', err))
