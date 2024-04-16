@@ -13,11 +13,11 @@ const client = new Client({
 
 
 client.connect()
-  .then(() => console.log('Connesso al database PostgreSQL'))
-  .catch(err => console.error('Errore durante la connessione al database', err));
+  .then(() => console.log('Connected to the PostgreSQL database'))
+  .catch(err => console.error('Error while connecting to the database', err));
 
 
 client.query('SELECT * FROM album')
   .then(result => console.log(result.rows))
-  .catch(err => console.error('Errore durante l\'esecuzione della query', err))
+  .catch(err => console.error('Error executing the query', err))
   .finally(() => client.end());
