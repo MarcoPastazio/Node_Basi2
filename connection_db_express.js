@@ -17,6 +17,7 @@ const pool = new Pool({
 
 app.use(express.json());
 
+
 app.get('/', (req, res) => {
   pool.query('SELECT * FROM album')
     .then(result => res.json(result.rows))
