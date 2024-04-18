@@ -55,6 +55,6 @@ app.listen(PORT, () => {
 
 
 
-//generazione del token
-//put e delete
-//typescript
+//put e delete in node/express
+//tutto quello che hai fatto con node/express con typescript
+//generazione del token (chiedi a raffaele)
