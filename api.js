@@ -1,5 +1,5 @@
 const express = require('express');
-const db = require('./database');
+const db = require('./connection_db_express');
 
 const app = express()
 
@@ -29,5 +29,5 @@ process.on('SIGINT', () => {
   
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
-    console.log(`Server is running on ${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
   });
