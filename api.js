@@ -20,6 +20,21 @@ app.get('/api/customers', async (req, res) => {
     }
 });
 
+app.post('/api/addcustomer', async (req, res) => {
+    try{
+        const {email, name, surname} = req.body;
+
+        const queryText = 'INSERT INTO customer (email, name, surname) value ($1, $2, $3) RETURNING *';
+        const values = [email, name, surname];
+        const result = await db.query(queryText, values);
+
+        res.json(result.rows[0]);
+    }catch (err){
+        console.error('Error for the Post request:', error);
+        res.status(500).json({error: 'Error for the Post request'});
+    }
+});
+
 
 process.on('SIGINT', () => {
     db.end()
