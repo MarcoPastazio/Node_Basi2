@@ -3,6 +3,12 @@ const db = require('./connection_db_express');
 
 const app = express()
 
+//use the json for send and recieve the date
+app.use(express.json());
+
+app.get('/', (req, res) => {
+    res.send('Welcome');
+})
 
 app.get('/api/customers', async (req, res) => {
     try{
