@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken');
 
 const bcrypt = require('bcrypt');
 
-const { Customer } = require('./customerModel');
+const models = require('./customerModel');
+const Customer = models.Customer;
 
 //
 //const cript = require('crypto').randomBytes(64).toString('hex');
@@ -51,22 +52,24 @@ function authenticateToken(req, res, next) {
 //with a video
 app.post("/register", (req, res) => {
     const { email, password, name, surname } = req.body;
-     bcrypt.hash(password, 10).then((hash) => {
-        Customer.create({
-            email: email,
-            password: hash,
-            name: name,
-            surname: surname
-        }).then(() => {
-            res.json("customer registrated");
-        }).catch((err) => {
-            if (err){
-                res.status(400).json({ error: err});
-            }
+    bcrypt.hash(password, 10).then((hash) => {
+      Customer.create({
+        email: email,
+        password: hash,
+        name: name,
+        surname: surname
+      })
+        .then(() => {
+          res.json("USER REGISTERED");
         })
-     })
-    
+        .catch((err) => {
+          if (err) {
+            res.status(400).json({ error: err });
+          }
+        });
+    });
 });
+
 
 app.post("/login", (req, res) => {
     res.json("login");
