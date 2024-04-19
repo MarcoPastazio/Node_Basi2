@@ -1,5 +1,10 @@
 const express = require('express');
 const db = require('./connection_db_express');
+const jwt = require('jsonwebtoken');
+
+const secret = require('crypto').randomBytes(64).toString('hex');
+
+
 
 const app = express()
 
