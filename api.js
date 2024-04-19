@@ -1,19 +1,88 @@
 const express = require('express');
 const db = require('./connection_db_express');
+//
 const jwt = require('jsonwebtoken');
 
-const secret = require('crypto').randomBytes(64).toString('hex');
+const bcrypt = require('bcrypt');
 
+const { Customer } = require('./customerModel');
 
+//
+//const cript = require('crypto').randomBytes(64).toString('hex');
+//
+const dotenv = require('dotenv');
 
-const app = express()
+// get config vars (i don't know if i serve a var variable or const variable)
+dotenv.config();
 
+// access config var (i don't know if i serve a var variable or const variable)
+//const token_secret = process.env.TOKEN_SECRET;
+
+const app = express();
 //use the json for send and recieve the date
 app.use(express.json());
+/*
+//
+function generateAccessToken(email) {
+    return jwt.sign({ email }, process.env.TOKEN_SECRET, { expiresIn: '1800s' });
+}
+
+//
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) return res.sendStatus(401);
+
+    jwt.verify(token, token_secret, (err, user) => {
+        if (err) {
+            if (err.name === 'TokenExpiredError') {
+                return res.status(401).json({ error: 'Token expired' });
+            } else {
+                return res.status(403).json({ error: 'Invalid token' });
+            }
+        }
+
+        req.user = user;
+        next();
+    });
+}*/
+
+//with a video
+app.post("/register", (req, res) => {
+    const { email, password, name, surname } = req.body;
+     bcrypt.hash(password, 10).then((hash) => {
+        Customer.create({
+            email: email,
+            password: hash,
+            name: name,
+            surname: surname
+        }).then(() => {
+            res.json("customer registrated");
+        }).catch((err) => {
+            if (err){
+                res.status(400).json({ error: err});
+            }
+        })
+     })
+    
+});
+
+app.post("/login", (req, res) => {
+    res.json("login");
+});
+
+app.get("/profile", (req, res) => {
+    res.json("profile");
+});
+
+
+//before i modified customer's table adding password's attribute (without token)
 
 app.get('/', (req, res) => {
     res.send('Welcome');
-})
+});
+
 
 app.get('/api/customers', async (req, res) => {
     try{
@@ -27,7 +96,7 @@ app.get('/api/customers', async (req, res) => {
 
 app.post('/api/addcustomer', async (req, res) => {
     try{
-        const {email, name, surname} = req.body;
+        const {email, password, name, surname} = req.body;
 
         const checkQueryText = 'SELECT * FROM customer WHERE email = $1';
         const checkQueryValues = [email];
@@ -36,26 +105,28 @@ app.post('/api/addcustomer', async (req, res) => {
         if(checkResult.rows.length > 0){
             res.status(409).json({error: 'Element already exists'});
         }else{
-            const queryText = 'INSERT INTO customer (email, name, surname) values ($1, $2, $3) RETURNING *';
-            const values = [email, name, surname];
+            const queryText = 'INSERT INTO customer (email, password, name, surname) values ($1, $2, $3, $4) RETURNING *';
+            const values = [email, password, name, surname];
             const result = await db.query(queryText, values);
 
             res.json(result.rows[0]);
         }
+
     }catch (err){
         console.error('Error for the Post request:', err);
         res.status(500).json({error: 'Error for the Post request'});
     }
 });
 
+
 app.put('/api/updatecustomer/:email', async (req, res) => {
     try{
         const customerEmail = req.params.email;
 
-        const {email, name, surname} = req.body;
-        const queryText = `UPDATE customer SET email = $1, name = $2, surname = $3 WHERE email = $4 RETURNING *`;
+        const {email, password, name, surname} = req.body;
+        const queryText = `UPDATE customer SET email = $1, password = $2, name = $3, surname $4 WHERE email = $4 RETURNING *`;
         //In the PUT request, we also need to include the values for the WHERE clause in the values array.
-        const values = [email, name, surname, customerEmail];
+        const values = [email, password, name, surname, customerEmail];
         const result = await db.query(queryText, values);
         
         
@@ -96,15 +167,13 @@ app.delete('/api/deletecustomer/:email', async (req, res) => {
 });
 
 process.on('SIGINT', () => {
-    db.end()
-      .then(() => {
-        console.log('Disconnection...');
-        process.exit(0);
-      })
-      .catch((err) => {
-        console.error('Disconnection error:', err);
-        process.exit(1);
-      });
+    console.log('Received SIGINT signal, closing server...');
+    process.exit();
+});
+
+process.on('SIGTERM', () => {
+    console.log('Received SIGTERM signal, closing server...');
+    process.exit();
 });
   
 const PORT = process.env.PORT || 3000;

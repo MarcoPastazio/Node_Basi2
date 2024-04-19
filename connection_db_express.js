@@ -1,30 +1,20 @@
-//this is a prove for a simple connection for the db using node and express
+const { Sequelize } = require('sequelize');
+const dotenv = require('dotenv');
 
+dotenv.config();
 
-const express = require('express');
-const { Pool } = require('pg');
-const bodyParser = require('body-parser')
-
-const app = express();
-app.use(bodyParser.json());
-
-const port = process.env.port || 3000;
-
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'music_store',
-  password: 'marcopastore',
-  port: 5432,
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+  host: process.env.DB_HOST,
+  dialect: 'postgres',
+  port: process.env.DB_PORT,
 });
 
-pool.on('error', (err, client) => {
-  console.error('Connection error', err);
-  process.exit(-1);
-})
+sequelize.authenticate()
+  .then(() => {
+    console.log('Database connected...');
+  })
+  .catch((err) => {
+    console.error('Database connenction error...:', err);
+  });
 
-//i import only 2 function about pool
-module.exports = {
-  query: (text, params) => pool.query(text, params),
-  end: () => pool.end(),
-};
+module.exports = sequelize;
