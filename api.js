@@ -24,17 +24,71 @@ app.post('/api/addcustomer', async (req, res) => {
     try{
         const {email, name, surname} = req.body;
 
-        const queryText = 'INSERT INTO customer (email, name, surname) values ($1, $2, $3) RETURNING *';
-        const values = [email, name, surname];
-        const result = await db.query(queryText, values);
+        const checkQueryText = 'SELECT * FROM customer WHERE email = $1';
+        const checkQueryValues = [email];
+        const checkResult = await db.query(checkQueryText, checkQueryValues);
 
-        res.json(result.rows[0]);
+        if(checkResult.rows.length > 0){
+            res.status(409).json({error: 'Element already exists'});
+        }else{
+            const queryText = 'INSERT INTO customer (email, name, surname) values ($1, $2, $3) RETURNING *';
+            const values = [email, name, surname];
+            const result = await db.query(queryText, values);
+
+            res.json(result.rows[0]);
+        }
     }catch (err){
         console.error('Error for the Post request:', err);
         res.status(500).json({error: 'Error for the Post request'});
     }
 });
 
+app.put('/api/updatecustomer/:email', async (req, res) => {
+    try{
+        const customerEmail = req.params.email;
+
+        const {email, name, surname} = req.body;
+        const queryText = `UPDATE customer SET email = $1, name = $2, surname = $3 WHERE email = $4 RETURNING *`;
+        //In the PUT request, we also need to include the values for the WHERE clause in the values array.
+        const values = [email, name, surname, customerEmail];
+        const result = await db.query(queryText, values);
+        
+        
+        if(result.rows.length === 0){
+            res.status(404).json({error: 'Element not found'});
+        }else{
+            res.json(result.rows[0]);
+        }
+        
+    }catch (err){
+        console.error('Error for the Put request', err);
+        res.status(500).json({error: 'Error for the Put request'});
+    }
+});
+
+app.delete('/api/deletecustomer/:email', async (req, res) => {
+    try{
+        const customerEmail = req.params.email;
+
+        const checkQueryText = 'SELECT * FROM customer WHERE email = $1';
+        const checkQueryValues = [customerEmail];
+        const checkResult = await db.query(checkQueryText, checkQueryValues);
+
+        if(checkResult.rows.length === 0){
+            res.status(404).json({error: 'element not found'});
+        }else{
+            const query = 'DELETE FROM customer WHERE email = $1';
+            const values = [customerEmail];
+            const result = await db.query(query,values);
+
+            res.json({message: 'Element deleted successfully'});
+        }
+    }catch(err){
+        console.error('Error for the Delete operation', err);
+        res.status(500).json({error: 'Error for the Delete operation'});
+    }
+
+});
 
 process.on('SIGINT', () => {
     db.end()
@@ -54,7 +108,5 @@ app.listen(PORT, () => {
 });
 
 
-
-//put e delete in node/express
+//generazione del token (login e signin)
 //tutto quello che hai fatto con node/express con typescript
-//generazione del token (chiedi a raffaele)
