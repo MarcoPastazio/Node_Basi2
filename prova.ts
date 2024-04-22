@@ -1,7 +1,7 @@
-const user = {
+const loser = {
     username: "Marco",
     surname: "Pastore",
     age: 19
 };
 
-console.log(typeof(user.age));
+console.log(loser.age);
