@@ -1,11 +1,12 @@
 const express = require('express');
-const db = require('./sequelize');
+
 //
 const jwt = require('jsonwebtoken');
 
 const bcrypt = require('bcrypt');
 
-const { Customer } = require('./customerModel');
+const db = require("./models");
+const { Customer } = require("./models");
 
 //
 //const cript = require('crypto').randomBytes(64).toString('hex');
