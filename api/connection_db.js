@@ -7,12 +7,15 @@ const { Pool } = require('pg');
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
-  database: 'Music_Store',
+  database: 'music_store',
   password: 'marcopastore',
   port: 5432,
 });
 
+module.exports = pool;
+
 //i create a HTTP-server
+/*
 const server = http.createServer((req, res) => {
   //do an example of query
   pool.query('SELECT * FROM album')
@@ -25,9 +28,10 @@ const server = http.createServer((req, res) => {
     res.end('Query error');
   });
 });
-
-const port = 3002;
+*/
 /*
+const port = 3002;
+
 server.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });

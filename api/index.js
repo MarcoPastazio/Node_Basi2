@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const jwt = require('jsonwebtoken');
 app.use(express.json());
+const db = require("./connection_db");
 
 const customers = [
     {
@@ -29,24 +30,41 @@ const generateRefreshToken = (customer) => {
     return jwt.sign({ id:customer.id, username: customer.username }, "myRefreshSecretKey");
 }
 
-app.post("/api/login", (req, res) => {
+app.post("/api/login", async (req, res) => {
     const { username, password } = req.body;
-    const customer = customers.find(u=>{
+    /*const customer = customers.find(u=>{
         return u.username === username && u.password === password;
-    });
-    if(customer){
-        //Generate an Access Token
-        const acsessToken = generateAccessToken(customer);
-        const refreshToken = generateRefreshToken(customer);
-        refreshTokens.push(refreshToken);
+    });*/
+
+    try{
+        const result = await db.query('SELECT * FROM customer WHERE username = $1 AND password = $2', [username, password]);
+
+        if (result.rows.length === 0) {
+            return res.status(400).json("Username or password incorrect!");
+        }
+
+        const customer = result.rows[0];
+
+
+        if(customer){
+            //Generate an Access Token
+            const acsessToken = generateAccessToken(customer);
+            const refreshToken = generateRefreshToken(customer);
+            refreshTokens.push(refreshToken);
+            
+            res.json({
+                username:customer.username,
+                acsessToken,
+                refreshToken
+            });
+        }else{
+            res.status(400).json("Username or password incorrect!");
+        }
         
-        res.json({
-            username:customer.username,
-            acsessToken,
-            refreshToken
-        });
-    }else{
-        res.status(400).json("Username or password incorrect!");
+
+    }catch (err){
+        console.error('Query error', err);
+        res.status(500).json({ error: 'Server error'});
     }
 });
 
