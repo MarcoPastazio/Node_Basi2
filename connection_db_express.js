@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+/*const { Sequelize } = require('sequelize');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -17,4 +17,4 @@ sequelize.authenticate()
     console.error('Database connenction error...:', err);
   });
 
-module.exports = sequelize;
+module.exports = sequelize;*/

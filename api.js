@@ -1,5 +1,5 @@
 const express = require('express');
-const db = require('./connection_db_express');
+const db = require('./sequelize');
 //
 const jwt = require('jsonwebtoken');
 
