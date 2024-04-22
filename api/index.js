@@ -4,20 +4,6 @@ const jwt = require('jsonwebtoken');
 app.use(express.json());
 const db = require("./connection_db");
 
-const customers = [
-    {
-        id: "1",
-        username: "John",
-        password: "password1",       
-    },
-
-    {
-        id: "2",
-        username: "Jane",
-        password: "password2"  
-    },
-];
-
 let refreshTokens = [];
 
 const generateAccessToken = (customer) => {
@@ -32,9 +18,12 @@ const generateRefreshToken = (customer) => {
 
 app.post("/api/login", async (req, res) => {
     const { username, password } = req.body;
-    /*const customer = customers.find(u=>{
+    /*
+    //before i create statically an object with a lot of people, now i interrogate the db, letsgoski
+    const customer = customers.find(u=>{
         return u.username === username && u.password === password;
-    });*/
+    });
+    */
 
     try{
         const result = await db.query('SELECT * FROM customer WHERE username = $1 AND password = $2', [username, password]);
