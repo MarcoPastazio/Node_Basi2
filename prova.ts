@@ -1,7 +1,11 @@
-const loser = {
-    username: "Marco",
-    surname: "Pastore",
-    age: 19
-};
+import express from 'express'
+const app = express();
 
-console.log(loser.age);
+app.get("/", (req, res) => {
+    res.send("Hello world!");
+});
+
+
+app.listen(4000, () => {
+    console.log('Server is running on port 4000');
+});
