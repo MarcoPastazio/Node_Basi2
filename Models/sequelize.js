@@ -44,9 +44,6 @@ fs
 
 });
 
-const Customer = require('./customerModel');
-db[Customer.name] = Customer;
-
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
