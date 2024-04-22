@@ -1,5 +1,25 @@
-function somma(a: number, b: number): number{
-    return a + b;
+interface Customer{
+    surname: string;
+    password: string;
 }
 
-console.log(somma(1, 2));
+//type aliases
+type alfanumerico = number | string;
+
+let ciao: alfanumerico;
+ciao = 7;
+ciao = "ciao";
+
+//literals types 
+let clickEvent: "click" | "dblclick";
+
+clickEvent = "click";
+
+//type guardas
+/*
+function isNumber(x: any): x is number{
+    //
+}
+*/
+
+//generics

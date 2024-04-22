@@ -1,4 +1,3 @@
-function somma(a, b) {
-    return a + b;
-}
-console.log(somma(1, 2));
+var ciao;
+ciao = 7;
+ciao = "ciao";
