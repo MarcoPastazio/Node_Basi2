@@ -1,11 +1,5 @@
-import express from 'express'
-const app = express();
+function somma(a: number, b: number): number{
+    return a + b;
+}
 
-app.get("/", (req, res) => {
-    res.send("Hello world!");
-});
-
-
-app.listen(4000, () => {
-    console.log('Server is running on port 4000');
-});
+console.log(somma(1, 2));
