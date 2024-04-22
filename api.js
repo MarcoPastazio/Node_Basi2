@@ -9,15 +9,12 @@ const db = require("./models");
 const { Customer } = require("./models");
 
 //
-//const cript = require('crypto').randomBytes(64).toString('hex');
-//
+
 const dotenv = require('dotenv');
 
 // get config vars (i don't know if i serve a var variable or const variable)
 dotenv.config();
 
-// access config var (i don't know if i serve a var variable or const variable)
-//const token_secret = process.env.TOKEN_SECRET;
 
 const app = express();
 //use the json for send and recieve the date
@@ -65,10 +62,11 @@ process.on('SIGTERM', () => {
 });
   
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+db.sequelize.sync().then(() => {
+  app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
+  });
 });
-
 
 //generazione del token (login e signin)
 //tutto quello che hai fatto con node/express con typescript
