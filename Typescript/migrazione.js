@@ -36,18 +36,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express = require("express");
-var jwt = require("jsonwebtoken");
+var express_1 = require("express");
+var jsonwebtoken_1 = require("jsonwebtoken");
 var connection_db_1 = require("./connection_db");
-;
-var app = express();
-app.use(express.json());
+var app = (0, express_1.default)();
+app.use(express_1.default.json());
 var refreshTokens = [];
 var generateAccessToken = function (customer) {
-    return jwt.sign({ id: customer.id, username: customer.username }, "mySecretKey", { expiresIn: "10m" });
+    return jsonwebtoken_1.default.sign({ id: customer.id, username: customer.username }, "mySecretKey", { expiresIn: "10m" });
 };
 var generateRefreshToken = function (customer) {
-    return jwt.sign({ id: customer.id, username: customer.username }, "myRefreshSecretKey");
+    return jsonwebtoken_1.default.sign({ id: customer.id, username: customer.username }, "myRefreshSecretKey");
 };
 app.post("/api/login", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, username, password, result, customer, accessToken, refreshToken, err_1;
@@ -58,7 +57,7 @@ app.post("/api/login", function (req, res) { return __awaiter(void 0, void 0, vo
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, connection_db_1.pool.query('SELECT * FROM customer WHERE username = $1 AND password = $2', [username, password])];
+                return [4 /*yield*/, connection_db_1.pool.query("SELECT * FROM customer WHERE username = $1 AND password = $2", [username, password])];
             case 2:
                 result = _b.sent();
                 if (result.rows.length === 0) {
@@ -72,7 +71,7 @@ app.post("/api/login", function (req, res) { return __awaiter(void 0, void 0, vo
                     res.json({
                         username: customer.username,
                         accessToken: accessToken,
-                        refreshToken: refreshToken
+                        refreshToken: refreshToken,
                     });
                 }
                 else {
@@ -81,8 +80,8 @@ app.post("/api/login", function (req, res) { return __awaiter(void 0, void 0, vo
                 return [3 /*break*/, 4];
             case 3:
                 err_1 = _b.sent();
-                console.error('Query error', err_1);
-                res.status(500).json({ error: 'Server error' });
+                console.error("Query error", err_1);
+                res.status(500).json({ error: "Server error" });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
@@ -95,7 +94,7 @@ app.post("/api/refresh", function (req, res) {
     if (!refreshTokens.includes(refreshToken)) {
         return res.status(403).json("Refresh token is not valid");
     }
-    jwt.verify(refreshToken, "myRefreshSecretKey", function (err, customer) {
+    jsonwebtoken_1.default.verify(refreshToken, "myRefreshSecretKey", function (err, customer) {
         if (err) {
             console.error(err);
             return res.status(403).json("Token is not valid!");
@@ -117,7 +116,7 @@ var verify = function (req, res, next) {
     var authHeader = req.headers.authorization;
     if (authHeader) {
         var token = authHeader.split(" ")[1];
-        jwt.verify(token, "mySecretKey", function (err, customer) {
+        jsonwebtoken_1.default.verify(token, "mySecretKey", function (err, customer) {
             if (err) {
                 return res.status(403).json("Token is not valid!");
             }
@@ -142,6 +141,9 @@ app.post("/api/logout", verify, function (req, res) {
     var refreshToken = req.body.token;
     refreshTokens = refreshTokens.filter(function (token) { return token !== refreshToken; });
     res.status(200).json("You logged out successfully.");
+});
+app.get("/", function (req, res) {
+    res.send("Hello World!");
 });
 app.listen(5000, function () {
     console.log("Server running on http://localhost:5000");
