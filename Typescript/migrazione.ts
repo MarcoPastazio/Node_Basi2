@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express = require('express');
 import { Request, Response, NextFunction } from "express";
 import * as jwt from 'jsonwebtoken';
 import { pool } from "./connection_db";
@@ -9,7 +9,7 @@ interface Customer {
     //password: string;
 };
 
-const app = express.default();
+const app = express();
 app.use(express.json());
 
 let refreshTokens: string[] = [];
