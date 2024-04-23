@@ -1,14 +1,15 @@
-import express, { Request, Response, NextFunction } from "express";
-import jwt from 'jsonwebtoken';
+import * as express from 'express';
+import { Request, Response, NextFunction } from "express";
+import * as jwt from 'jsonwebtoken';
 import { pool } from "./connection_db";
 
 interface Customer {
     id: number;
     username: string;
-    password: string;
-}
+    //password: string;
+};
 
-const app = express();
+const app = express.default();
 app.use(express.json());
 
 let refreshTokens: string[] = [];
@@ -62,7 +63,7 @@ app.post("/api/refresh", (req: Request, res: Response) => {
         return res.status(403).json("Refresh token is not valid");
     }
 
-    jwt.verify(refreshToken, "myRefreshSecretKey", (err: Error | null, customer?: Customer) => {
+    jwt.verify(refreshToken, "myRefreshSecretKey", (err, customer: any) => {
         if (err) {
             console.error(err);
             return res.status(403).json("Token is not valid!");
@@ -92,7 +93,7 @@ const verify = (req: Request & { customer?: Customer }, res: Response, next: Nex
     if (authHeader) {
         const token = authHeader.split(" ")[1];
 
-        jwt.verify(token, "mySecretKey", (err: Error | null, customer?: Customer) => {
+        jwt.verify(token, "mySecretKey", (err, customer) => {
             if (err) {
                 return res.status(403).json("Token is not valid!");
             }
