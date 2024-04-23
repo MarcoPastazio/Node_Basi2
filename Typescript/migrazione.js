@@ -37,16 +37,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
-var jwt = require("jsonwebtoken");
+var jsonwebtoken_1 = require("jsonwebtoken");
 var connection_db_1 = require("./connection_db");
 var app = (0, express_1.default)();
 app.use(express_1.default.json());
 var refreshTokens = [];
 var generateAccessToken = function (customer) {
-    return jwt.sign({ id: customer.id, username: customer.username }, "mySecretKey", { expiresIn: "10m" });
+    return jsonwebtoken_1.default.sign({ id: customer.id, username: customer.username }, "mySecretKey", { expiresIn: "10m" });
 };
 var generateRefreshToken = function (customer) {
-    return jwt.sign({ id: customer.id, username: customer.username }, "myRefreshSecretKey");
+    return jsonwebtoken_1.default.sign({ id: customer.id, username: customer.username }, "myRefreshSecretKey");
 };
 app.post("/api/login", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, username, password, result, customer, accessToken, refreshToken, err_1;
@@ -94,7 +94,7 @@ app.post("/api/refresh", function (req, res) {
     if (!refreshTokens.includes(refreshToken)) {
         return res.status(403).json("Refresh token is not valid");
     }
-    jwt.verify(refreshToken, "myRefreshSecretKey", function (err, customer) {
+    jsonwebtoken_1.default.verify(refreshToken, "myRefreshSecretKey", function (err, customer) {
         if (err) {
             console.error(err);
             return res.status(403).json("Token is not valid!");
@@ -116,7 +116,7 @@ var verify = function (req, res, next) {
     var authHeader = req.headers.authorization;
     if (authHeader) {
         var token = authHeader.split(" ")[1];
-        jwt.verify(token, "mySecretKey", function (err, customer) {
+        jsonwebtoken_1.default.verify(token, "mySecretKey", function (err, customer) {
             if (err) {
                 return res.status(403).json("Token is not valid!");
             }
