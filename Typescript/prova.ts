@@ -8,7 +8,12 @@ type alfanumerico = number | string;
 
 let ciao: alfanumerico;
 ciao = 7;
+
+console.log(ciao);
+
 ciao = "ciao";
+
+console.log(ciao);
 
 //literals types 
 let clickEvent: "click" | "dblclick";
