@@ -1,4 +1,3 @@
-import http from "http";
 import { Pool } from "pg";
 
 //create one pool req
