@@ -76,4 +76,3 @@ function listaNomi(capo: string, ...other: string[]): string{
 let team = listaNomi("Marco", "Pino", "KekkoTagliatella");
 
 console.log(team);
-
