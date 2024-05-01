@@ -12,7 +12,7 @@ app.get("/", (req,res) => {
 const PORT = 3000;
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 //i set the port for the comunication e after the server listen on port 3000 (for my example)
